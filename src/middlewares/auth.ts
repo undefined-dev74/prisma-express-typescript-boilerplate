@@ -1,9 +1,9 @@
-import passport from 'passport';
-import httpStatus from 'http-status';
-import ApiError from '../utils/ApiError';
-import { roleRights } from '../config/roles';
-import { NextFunction, Request, Response } from 'express';
 import { User } from '@prisma/client';
+import { NextFunction, Request, Response } from 'express';
+import httpStatus from 'http-status';
+import passport from 'passport';
+import { roleRights } from '../config/roles';
+import ApiError from '../utils/ApiError';
 
 const verifyCallback =
   (
@@ -17,7 +17,7 @@ const verifyCallback =
       return reject(new ApiError(httpStatus.UNAUTHORIZED, 'Please authenticate'));
     }
     req.user = user;
-
+    console.log(user);
     if (requiredRights.length) {
       const userRights = roleRights.get(user.role) ?? [];
       const hasRequiredRights = requiredRights.every((requiredRight) =>

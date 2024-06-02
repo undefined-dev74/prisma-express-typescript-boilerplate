@@ -1,7 +1,7 @@
-import prisma from '../client';
-import { Strategy as JwtStrategy, ExtractJwt, VerifyCallback } from 'passport-jwt';
-import config from './config';
 import { TokenType } from '@prisma/client';
+import { ExtractJwt, Strategy as JwtStrategy, VerifyCallback } from 'passport-jwt';
+import prisma from '../client';
+import config from './config';
 
 const jwtOptions = {
   secretOrKey: config.jwt.secret,
@@ -17,7 +17,8 @@ const jwtVerify: VerifyCallback = async (payload, done) => {
       select: {
         id: true,
         email: true,
-        name: true
+        name: true,
+        role: true
       },
       where: { id: payload.sub }
     });

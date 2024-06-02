@@ -6,20 +6,72 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
-  name            String?
-  password        String
-  role            Role     @default(USER)
-  isEmailVerified Boolean  @default(false)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  Token           Token[]
+  model User {
+    id              Int      @id @default(autoincrement())
+    email           String   @unique
+    name            String?
+    password        String
+    role            Role     @default(USER)
+    isEmailVerified Boolean  @default(false)
+    createdAt       DateTime @default(now())
+    updatedAt       DateTime @updatedAt
+    Token           Token[]
+    investments     Investment[]
+    transactions    Transaction[]
+    @@index([email])
+  }
+
+model InvestmentPlan {
+  id               Int               @id @default(autoincrement())
+  name             String
+  amount           Float             // Required: The total amount for the investment plan
+  durationDays     Int               // Required: The duration of the investment plan in days
+  returnPercentage Float             // Required: The percentage return on the investment
+  dailyInterest    Float
+  status           String            @default("pending") // Optional: Status of the plan, default is "pending"
+  startDate        DateTime          // Required: The start date of the investment plan
+  endDate          DateTime          // Required: The end date of the investment plan
+  createdAt        DateTime          @default(now()) // Automatically set to the current date and time
+  updatedAt        DateTime          @updatedAt     // Automatically updated to the current date and time
+  investments      Investment[]
+}
+
+model Investment {
+  id               Int               @id @default(autoincrement())
+  userId           Int  
+  user             User              @relation(fields: [userId], references: [id])
+  investmentPlanId Int
+  investmentPlan   InvestmentPlan    @relation(fields: [investmentPlanId], references: [id])
+  amount           Float
+  startDate        DateTime
+  endDate          DateTime
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  transactions     Transaction[]     // Add this line to establish the back relation
+
+  @@index([userId])
+  @@index([investmentPlanId])
+}
+
+model Transaction {
+  id               Int               @id @default(autoincrement())
+  userId           Int
+  user             User              @relation(fields: [userId], references: [id])
+  investmentId     Int
+  investment       Investment        @relation(fields: [investmentId], references: [id])
+  transactionType  String            // e.g., "withdrawal", "return"
+  amount           Float
+  status           String            // e.g., "successful", "pending"
+  date             DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([userId])
+  @@index([investmentId])
 }
 
 model Token {
