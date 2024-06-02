@@ -1,3 +1,4 @@
+import { InvestmentPlan } from '@prisma/client';
 import httpStatus from 'http-status';
 import investmentService from '../services/investment.service';
 import ApiError from '../utils/ApiError';
@@ -16,7 +17,7 @@ const createInvestmentPlan = catchAsync(async (req, res) => {
     durationDays,
     startDate: new Date(startDate),
     endDate: new Date(endDate)
-  });
+  } as InvestmentPlan);
   res.status(httpStatus.CREATED).send(investment);
 });
 

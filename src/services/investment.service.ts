@@ -5,10 +5,10 @@ import ApiError from '../utils/ApiError';
 
 /**
  * Create a investment
- * @param {Object} investmentBody
+ * @param {Object} payload
  * @returns {Promise<Project>}
  */
-const createInvestmentPlan = async (payload: any): Promise<InvestmentPlan> => {
+const createInvestmentPlan = async (payload: InvestmentPlan): Promise<InvestmentPlan> => {
   // Check if an investment plan with the same name, startDate, and durationDays already exists
   const existingInvestmentPlan = await prisma.investmentPlan.findFirst({
     where: {
