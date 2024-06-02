@@ -1,4 +1,4 @@
-import { User, Role, Prisma } from '@prisma/client';
+import { Prisma, Role, User } from '@prisma/client';
 import httpStatus from 'http-status';
 import prisma from '../client';
 import ApiError from '../utils/ApiError';
@@ -56,18 +56,22 @@ const queryUsers = async <Key extends keyof User>(
     'updatedAt'
   ] as Key[]
 ): Promise<Pick<User, Key>[]> => {
-  const page = options.page ?? 1;
-  const limit = options.limit ?? 10;
-  const sortBy = options.sortBy;
-  const sortType = options.sortType ?? 'desc';
-  const users = await prisma.user.findMany({
-    where: filter,
-    select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
-    skip: page * limit,
-    take: limit,
-    orderBy: sortBy ? { [sortBy]: sortType } : undefined
-  });
-  return users as Pick<User, Key>[];
+  const { limit = 10, page = 1, sortBy, sortType = 'desc' } = options;
+
+  try {
+    const users = await prisma.user.findMany({
+      where: filter,
+      select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: sortBy ? { [sortBy]: sortType } : undefined
+    });
+
+    return users as Pick<User, Key>[];
+  } catch (error) {
+    console.error('Error querying Users:', error);
+    throw new Error('Failed to query Users');
+  }
 };
 
 /**
