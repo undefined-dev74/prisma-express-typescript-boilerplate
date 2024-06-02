@@ -1,6 +1,6 @@
 import { InvestmentPlan } from '@prisma/client';
 import httpStatus from 'http-status';
-import investmentService from '../services/investment.service';
+import investmentService from '../services/investmentPlan.service';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
 import pick from '../utils/pick';
@@ -22,8 +22,7 @@ const createInvestmentPlan = catchAsync(async (req, res) => {
 });
 
 const getInvestmentPlans = catchAsync(async (req, res) => {
-  console.log(req.query);
-  const filter = pick(req.query, ['name', 'amount']);
+  const filter = pick(req.query, ['name', 'status']);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await investmentService.queryInvestments(filter, options);
   res.send(result);

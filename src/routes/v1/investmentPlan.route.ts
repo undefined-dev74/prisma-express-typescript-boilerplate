@@ -1,8 +1,8 @@
 import express from 'express';
-import investmentController from '../../controllers/investment.controller';
+import investmentController from '../../controllers/investmentPlan.controller';
 import auth from '../../middlewares/auth';
 import validate from '../../middlewares/validate';
-import investmentValidation from '../../validations/investment.validation';
+import investmentValidation from '../../validations/investmentPlan.validation';
 
 const router = express.Router();
 

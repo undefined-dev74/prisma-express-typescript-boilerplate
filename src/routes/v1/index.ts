@@ -2,7 +2,7 @@ import express from 'express';
 import config from '../../config/config';
 import authRoute from './auth.route';
 import docsRoute from './docs.route';
-import investmentRoute from './investment.route';
+import investmentRoute from './investmentPlan.route';
 import userRoute from './user.route';
 
 const router = express.Router();
