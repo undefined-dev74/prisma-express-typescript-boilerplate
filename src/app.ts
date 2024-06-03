@@ -1,16 +1,17 @@
-import express from 'express';
-import helmet from 'helmet';
 import compression from 'compression';
 import cors from 'cors';
-import passport from 'passport';
+import express from 'express';
+import helmet from 'helmet';
 import httpStatus from 'http-status';
+import passport from 'passport';
 import config from './config/config';
 import morgan from './config/morgan';
-import xss from './middlewares/xss';
 import { jwtStrategy } from './config/passport';
-import { authLimiter } from './middlewares/rateLimiter';
-import routes from './routes/v1';
+// import './jobs/cronJobs';
 import { errorConverter, errorHandler } from './middlewares/error';
+import { authLimiter } from './middlewares/rateLimiter';
+import xss from './middlewares/xss';
+import routes from './routes/v1';
 import ApiError from './utils/ApiError';
 
 const app = express();

@@ -6,7 +6,7 @@ import ApiError from '../utils/ApiError';
 /**
  * Create a investment
  * @param {Object} payload
- * @returns {Promise<Project>}
+ * @returns {Promise<InvestmentPlan>}
  */
 const createInvestmentPlan = async (payload: InvestmentPlan): Promise<InvestmentPlan> => {
   // Check if an investment plan with the same name, startDate, and durationDays already exists
