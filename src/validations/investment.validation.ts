@@ -7,4 +7,18 @@ const createInvestment = {
   })
 };
 
-export default { createInvestment };
+const getInvestments = {
+  query: Joi.object().keys({
+    name: Joi.string(),
+    amount: Joi.number(),
+    balance: Joi.number(),
+    expectedReturn: Joi.number(),
+    startDate: Joi.date(),
+    userId: Joi.number().positive(),
+    sortBy: Joi.string(),
+    limit: Joi.number().integer(),
+    page: Joi.number().integer()
+  })
+};
+
+export default { createInvestment, getInvestments };

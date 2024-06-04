@@ -13,12 +13,12 @@ router
     auth('createInvestment'),
     validate(investmentValidation.createInvestment),
     investmentController.createInvestment
+  )
+  .get(
+    auth('getInvestment'),
+    validate(investmentValidation.getInvestments),
+    investmentController.getInvestments
   );
-//   .get(
-//     auth('getInvestmentPlans'),
-//     validate(investmentValidation.getInvestmentPlans),
-//     investmentController.getInvestmentPlans
-//   );
 // router
 //   .route('/:investmentPlanId')
 //   .get(

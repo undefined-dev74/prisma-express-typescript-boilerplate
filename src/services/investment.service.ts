@@ -106,7 +106,45 @@ export const updateDailyEarnings = async () => {
   console.log('Daily earnings updated successfully');
 };
 
+/**
+ * Query for users
+ * @param {Object} filter - Prisma filter
+ * @param {Object} options - Query options
+ * @param {string} [options.sortBy] - Sort option in the format: sortField:(desc|asc)
+ * @param {number} [options.limit] - Maximum number of results per page (default = 10)
+ * @param {number} [options.page] - Current page (default = 1)
+ * @returns {Promise<QueryResult>}
+ */
+
+export const queryInvestments = async <Key extends keyof Investment>(
+  filter: object,
+  options: {
+    limit?: number;
+    page?: number;
+    sortBy?: string;
+    sortType?: 'asc' | 'desc';
+  },
+  keys: Key[] = ['id', 'amount', 'balance', 'expectedReturn', 'startDate', 'userId'] as Key[]
+): Promise<Pick<Investment, Key>[]> => {
+  const { limit = 10, page = 1, sortBy, sortType = 'desc' } = options;
+
+  try {
+    const investments = await prisma.investment.findMany({
+      where: filter,
+      select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
+      skip: (page - 1) * limit,
+      take: limit,
+      orderBy: sortBy ? { [sortBy]: sortType } : undefined
+    });
+    return investments as Pick<Investment, Key>[];
+  } catch (error) {
+    console.error('Error querying investments:', error);
+    throw new Error('Failed to query investments');
+  }
+};
+
 export default {
   createInvestment,
-  updateDailyEarnings
+  updateDailyEarnings,
+  queryInvestments
 };

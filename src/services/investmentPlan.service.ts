@@ -40,7 +40,7 @@ const createInvestmentPlan = async (payload: InvestmentPlan): Promise<Investment
  * @returns {Promise<QueryResult>}
  */
 const queryInvestments = async <Key extends keyof InvestmentPlan>(
-  filter: object,
+  filter: Record<string, any>,
   options: {
     limit?: number;
     page?: number;
@@ -62,10 +62,35 @@ const queryInvestments = async <Key extends keyof InvestmentPlan>(
   ] as Key[]
 ): Promise<Pick<InvestmentPlan, Key>[]> => {
   const { limit = 10, page = 1, sortBy, sortType = 'desc' } = options;
+  const where: any = {};
+  if (filter.name) where.name = { contains: filter.name };
+  if (filter.amount) where.amount = filter.amount;
+  if (filter.returnPercentage) where.returnPercentage = filter.returnPercentage;
+  if (filter.dailyInterest) where.dailyInterest = filter.dailyInterest;
+  if (filter.status) where.status = filter.status;
+  if (filter.startDate) where.startDate = { gte: new Date(filter.startDate) };
+  if (filter.endDate) where.endDate = { lte: new Date(filter.endDate) };
+  if (filter.createdAt) where.createdAt = { gte: new Date(filter.createdAt) };
+  if (filter.updatedAt) where.updatedAt = { lte: new Date(filter.updatedAt) };
+
+  if (filter.minAmount) where.amount = { ...where.amount, gte: filter.minAmount };
+  if (filter.maxAmount) where.amount = { ...where.amount, lte: filter.maxAmount };
+  if (filter.minReturnPercentage)
+    where.returnPercentage = { ...where.returnPercentage, gte: filter.minReturnPercentage };
+  if (filter.maxReturnPercentage)
+    where.returnPercentage = { ...where.returnPercentage, lte: filter.maxReturnPercentage };
+  if (filter.minDailyInterest)
+    where.dailyInterest = { ...where.dailyInterest, gte: filter.minDailyInterest };
+  if (filter.maxDailyInterest)
+    where.dailyInterest = { ...where.dailyInterest, lte: filter.maxDailyInterest };
+  if (filter.minDurationDays)
+    where.durationDays = { ...where.durationDays, gte: filter.minDurationDays };
+  if (filter.maxDurationDays)
+    where.durationDays = { ...where.durationDays, lte: filter.maxDurationDays };
 
   try {
     const investments = await prisma.investmentPlan.findMany({
-      where: filter,
+      where,
       select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
       skip: (page - 1) * limit,
       take: limit,

@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 
 import { investmentService } from '../services';
 import catchAsync from '../utils/catchAsync';
+import pick from '../utils/pick';
 
 const createInvestment = catchAsync(async (req: any, res) => {
   const userId = req?.user?.id;
@@ -16,6 +17,14 @@ const createInvestment = catchAsync(async (req: any, res) => {
   res.status(httpStatus.CREATED).send(investment);
 });
 
+const getInvestments = catchAsync(async (req, res) => {
+  const filter = pick(req.query, ['amount', 'balance']);
+  const options = pick(req.query, ['sortBy', 'limit', 'page']);
+  const result = await investmentService.queryInvestments(filter, options);
+  res.send(result);
+});
+
 export default {
-  createInvestment
+  createInvestment,
+  getInvestments
 };

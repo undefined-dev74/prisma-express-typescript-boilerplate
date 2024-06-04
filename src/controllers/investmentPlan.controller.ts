@@ -22,7 +22,25 @@ const createInvestmentPlan = catchAsync(async (req, res) => {
 });
 
 const getInvestmentPlans = catchAsync(async (req, res) => {
-  const filter = pick(req.query, ['name', 'status']);
+  const filter = pick(req.query, [
+    'name',
+    'amount',
+    'returnPercentage',
+    'dailyInterest',
+    'status',
+    'startDate',
+    'endDate',
+    'createdAt',
+    'updatedAt',
+    'minAmount',
+    'maxAmount',
+    'minReturnPercentage',
+    'maxReturnPercentage',
+    'minDailyInterest',
+    'maxDailyInterest',
+    'minDurationDays',
+    'maxDurationDays'
+  ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await investmentService.queryInvestments(filter, options);
   res.send(result);
