@@ -6,6 +6,7 @@ import investmentRoute from './investment.route';
 import investmentPlanRoute from './investmentPlan.route';
 import transactionRoute from './transaction.route';
 import userRoute from './user.route';
+import webhookRoute from './webhook.route';
 
 const router = express.Router();
 
@@ -29,6 +30,10 @@ const defaultRoutes = [
   {
     path: '/transaction',
     route: transactionRoute
+  },
+  {
+    path: '/api',
+    route: webhookRoute
   }
 ];
 
