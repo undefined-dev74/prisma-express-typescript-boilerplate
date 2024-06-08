@@ -131,7 +131,12 @@ export const queryInvestments = async <Key extends keyof Investment>(
   try {
     const investments = await prisma.investment.findMany({
       where: filter,
-      select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
+      include: {
+        investmentPlan: {
+          select: { name: true, amount: true }
+        }
+      },
+      // select: keys.reduce((obj, k) => ({ ...obj, [k]: true }), {}),
       skip: (page - 1) * limit,
       take: limit,
       orderBy: sortBy ? { [sortBy]: sortType } : undefined
