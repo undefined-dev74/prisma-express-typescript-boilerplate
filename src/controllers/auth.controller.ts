@@ -1,8 +1,9 @@
-import httpStatus from 'http-status';
-import catchAsync from '../utils/catchAsync';
-import { authService, userService, tokenService, emailService } from '../services';
-import exclude from '../utils/exclude';
 import { User } from '@prisma/client';
+import httpStatus from 'http-status';
+import { SuccessResponse } from '../core/ApiResponse';
+import { authService, emailService, tokenService, userService } from '../services';
+import catchAsync from '../utils/catchAsync';
+import exclude from '../utils/exclude';
 
 const register = catchAsync(async (req, res) => {
   const { email, password } = req.body;
@@ -14,9 +15,11 @@ const register = catchAsync(async (req, res) => {
 
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
+
   const user = await authService.loginUserWithEmailAndPassword(email, password);
   const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
+  new SuccessResponse('Login Successfully', { user, tokens }).send(res);
+  // res.send({ user, tokens });
 });
 
 const logout = catchAsync(async (req, res) => {

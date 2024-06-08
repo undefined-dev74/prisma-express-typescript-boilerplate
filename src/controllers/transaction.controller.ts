@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import prisma from '../client';
+import { SuccessResponse } from '../core/ApiResponse';
 import { transactionService } from '../services';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
@@ -23,7 +24,7 @@ const getTransactions = catchAsync(async (req: any, res) => {
     filter.userId = userId;
   }
   const result = await transactionService.queryTransactions(filter, options);
-  res.send(result);
+  new SuccessResponse('Transactions fetched successfully.', result).send(res);
 });
 
 const withdraw = catchAsync(async (req: any, res: Response) => {

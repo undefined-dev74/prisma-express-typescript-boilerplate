@@ -1,5 +1,6 @@
 import { InvestmentPlan } from '@prisma/client';
 import httpStatus from 'http-status';
+import { SuccessResponse } from '../core/ApiResponse';
 import investmentService from '../services/investmentPlan.service';
 import ApiError from '../utils/ApiError';
 import catchAsync from '../utils/catchAsync';
@@ -43,7 +44,7 @@ const getInvestmentPlans = catchAsync(async (req, res) => {
   ]);
   const options = pick(req.query, ['sortBy', 'limit', 'page']);
   const result = await investmentService.queryInvestments(filter, options);
-  res.send(result);
+  new SuccessResponse('Investments fetch successfully.', result).send(res);
 });
 
 const getInvestmentPlan = catchAsync(async (req, res) => {
