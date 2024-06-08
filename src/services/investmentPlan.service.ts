@@ -25,7 +25,8 @@ const createInvestmentPlan = async (payload: InvestmentPlan): Promise<Investment
 
   return prisma.investmentPlan.create({
     data: {
-      ...payload
+      ...payload,
+      returnPercentage: payload.dailyInterest * payload.durationDays
     }
   });
 };

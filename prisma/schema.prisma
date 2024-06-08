@@ -31,7 +31,7 @@ model InvestmentPlan {
   name             String
   amount           Float // Required: The total amount for the investment plan
   durationDays     Int // Required: The duration of the investment plan in days
-  returnPercentage Float // Required: The percentage return on the investment
+  returnPercentage Float        @default(0) // we will calculate the return percentage based on days of invesment plan
   dailyInterest    Float
   status           String       @default("pending") // Optional: Status of the plan, default is "pending"
   startDate        DateTime // Required: The start date of the investment plan

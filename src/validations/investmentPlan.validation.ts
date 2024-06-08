@@ -6,7 +6,7 @@ const createInvestmentPlan = {
     amount: Joi.number().integer(),
     dailyInterest: Joi.number().required(),
     description: Joi.string(),
-    returnPercentage: Joi.number().required(),
+    returnPercentage: Joi.number(),
     durationDays: Joi.number().integer().required(),
     startDate: Joi.date().required(),
     endDate: Joi.date().required()
