@@ -19,6 +19,13 @@ router
     validate(investmentValidation.getInvestments),
     investmentController.getInvestments
   );
+
+router.get(
+  '/ledger/:investmentPlanId',
+  auth('getInvestment'),
+  validate(investmentValidation.getInvestmentLedger),
+  investmentController.getInvestmentLedger
+);
 // router
 //   .route('/:investmentPlanId')
 //   .get(

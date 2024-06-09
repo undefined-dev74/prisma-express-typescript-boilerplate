@@ -21,4 +21,10 @@ const getInvestments = {
   })
 };
 
-export default { createInvestment, getInvestments };
+const getInvestmentLedger = {
+  params: Joi.object().keys({
+    investmentPlanId: Joi.number().required()
+  })
+};
+
+export default { createInvestment, getInvestments, getInvestmentLedger };

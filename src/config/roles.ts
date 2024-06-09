@@ -6,7 +6,8 @@ const allRoles = {
     'createTransaction',
     'getTransactions',
     'withdraw',
-    'getInvestment'
+    'getInvestment',
+    'getInvestmentPlans'
   ],
   [Role.ADMIN]: [
     'getUsers',

@@ -207,7 +207,7 @@ const updateInvestmentPlanById = async <Key extends keyof InvestmentPlan>(
 
 /**
  * Delete investment by id
- * @param {ObjectId} investmentId
+ * @param {ObjectId} investmentPlanId
  * @returns {Promise<investment>}
  */
 const deleteInvestmentPlanById = async (investmentPlanId: number): Promise<InvestmentPlan> => {

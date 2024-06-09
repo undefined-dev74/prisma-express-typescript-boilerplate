@@ -17,9 +17,11 @@ CREATE TABLE `User` (
 -- CreateTable
 CREATE TABLE `InvestmentPlan` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(191) NOT NULL,
     `amount` DOUBLE NOT NULL,
     `durationDays` INTEGER NOT NULL,
-    `returnPercentage` DOUBLE NOT NULL,
+    `returnPercentage` DOUBLE NOT NULL DEFAULT 0,
+    `dailyInterest` DOUBLE NOT NULL,
     `status` VARCHAR(191) NOT NULL DEFAULT 'pending',
     `startDate` DATETIME(3) NOT NULL,
     `endDate` DATETIME(3) NOT NULL,
@@ -35,7 +37,9 @@ CREATE TABLE `Investment` (
     `userId` INTEGER NOT NULL,
     `investmentPlanId` INTEGER NOT NULL,
     `amount` DOUBLE NOT NULL,
-    `startDate` DATETIME(3) NOT NULL,
+    `balance` DOUBLE NOT NULL DEFAULT 0,
+    `expectedReturn` DOUBLE NOT NULL,
+    `startDate` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `endDate` DATETIME(3) NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -50,15 +54,30 @@ CREATE TABLE `Transaction` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `userId` INTEGER NOT NULL,
     `investmentId` INTEGER NOT NULL,
-    `transactionType` VARCHAR(191) NOT NULL,
+    `transactionType` ENUM('INVESTMENT', 'WITHDRAWAL', 'DIVIDEND', 'BONUS', 'CREDIT', 'DEBIT') NOT NULL,
     `amount` DOUBLE NOT NULL,
-    `status` VARCHAR(191) NOT NULL,
+    `status` ENUM('PENDING', 'SUCCESSFUL', 'FAILED') NOT NULL,
     `date` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
 
     INDEX `Transaction_userId_idx`(`userId`),
     INDEX `Transaction_investmentId_idx`(`investmentId`),
+    PRIMARY KEY (`id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `InvestmentLedger` (
+    `id` INTEGER NOT NULL AUTO_INCREMENT,
+    `userId` INTEGER NOT NULL,
+    `investmentId` INTEGER NOT NULL,
+    `dueDate` DATETIME(3) NOT NULL,
+    `status` VARCHAR(191) NOT NULL DEFAULT 'INCOMPLETE',
+    `receivable` DOUBLE NOT NULL,
+    `paid` DOUBLE NOT NULL DEFAULT 0,
+    `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    `updatedAt` DATETIME(3) NOT NULL,
+
     PRIMARY KEY (`id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
@@ -86,6 +105,12 @@ ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_userId_fkey` FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE `Transaction` ADD CONSTRAINT `Transaction_investmentId_fkey` FOREIGN KEY (`investmentId`) REFERENCES `Investment`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InvestmentLedger` ADD CONSTRAINT `InvestmentLedger_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE `InvestmentLedger` ADD CONSTRAINT `InvestmentLedger_investmentId_fkey` FOREIGN KEY (`investmentId`) REFERENCES `Investment`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE `Token` ADD CONSTRAINT `Token_userId_fkey` FOREIGN KEY (`userId`) REFERENCES `User`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE;
