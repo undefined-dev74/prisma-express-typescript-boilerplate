@@ -69,6 +69,11 @@ const queryTransactions = async <Key extends keyof Transaction>(
   }
 };
 
+/**
+ * get user balance
+ * @param {number} userId
+ * @returns {Promise<number>}
+ */
 const getUserBalance = async (userId: number): Promise<number> => {
   const investments = await prisma.investment.findMany({
     where: { userId },
@@ -84,7 +89,12 @@ const getUserBalance = async (userId: number): Promise<number> => {
   return totalBalance;
 };
 
-const getPendingWithdrawal = async (userId: number) => {
+/**
+ * get pending withdrawals
+ * @param {number} userId
+ * @returns {Promise<any>}
+ */
+const getPendingWithdrawal = async (userId: number): Promise<any> => {
   return prisma.transaction.findFirst({
     where: {
       userId,
@@ -94,9 +104,15 @@ const getPendingWithdrawal = async (userId: number) => {
   });
 };
 
+/**
+ * create new withdraw
+ * @param {Object} data - Transaction
+ * @returns {Promise<Transaction>}
+ */
+
 const createWithdrawal = async (
   data: Omit<Transaction, 'id' | 'createdAt' | 'updatedAt' | 'transactionType' | 'status' | 'date'>
-) => {
+): Promise<Transaction> => {
   return prisma.transaction.create({
     data: {
       userId: data.userId,
